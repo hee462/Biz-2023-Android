@@ -1,0 +1,40 @@
+{
+    // IntelliSense를 사용하여 가능한 특성에 대해 알아보세요.
+    // 기존 특성에 대한 설명을 보려면 가리킵니다.
+    // 자세한 내용을 보려면 https://go.microsoft.com/fwlink/?linkid=830387을(를) 방문하세요.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "dart-000-hello",
+            "cwd": "dart-000-hello",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "dart-001-hello",
+            "cwd": "dart-001-hello",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter-000 hello",
+            "cwd": "flutter-000 hello",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter-000 hello (profile mode)",
+            "cwd": "flutter-000 hello",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter-000 hello (release mode)",
+            "cwd": "flutter-000 hello",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
