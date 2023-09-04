@@ -7,3 +7,15 @@
 flutter pub get intl
 
 ```
+
+## persistance 설정
+
+- 영속적 Data 관리
+- DBMS 나 File에 데이터를 저장하여, app이 종료되어도 그 값을 유지도록 하는 것
+- phone에 기본적으로 내장된 DBMS 를 사용하기 : `sqlite`를 사용하여 data를 저장하기
+
+```bash
+flutter pub add sqflite
+flutter pub add path
+
+```
