@@ -36,6 +36,16 @@ class _UserInput extends State<UserInput> {
     super.initState();
   }
 
+  /// State에서 사용하던 Controller를 메모리에서 제거하기
+  /// 이 코드를 작성하지 않으면 메모리 leak(누수)가 발생
+  @override
+  void dispose() {
+    userNameInputController.dispose();
+    passwordInputController.dispose();
+    nicknameInputController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
