@@ -22,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Todo getTodo(String content) => Todo(
       sdate: DateFormat("yyyy-MM-dd").format(DateTime.now()),
-      stime: DateFormat("HH:ss:mm").format(DateTime.now()),
+      stime: DateFormat("HH:mm:ss").format(DateTime.now()),
       content: content,
       complete: false);
 
@@ -86,11 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     var todo = getTodo(todoContent);
+                    await TodoService().insert(todo);
                     setState(() {
-                      // todoList.add(todo);
-                      TodoService().insert(todo);
+                      FocusScope.of(context).unfocus();
                       todoContent = "";
                       inputController.clear();
                     });
@@ -169,26 +169,30 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
             /// 사라지기 전의 event
+            /// .
             /// event 핸들러에서 Future.value(true) 를 return 하면
             /// swipe 행위가 진행되고, false 를 return 하면 진행을 멈춘다
-            confirmDismiss: (direction) => onConfirmHandler(direction, index),
+            confirmDismiss: (direction) =>
+                onConfirmHandler(direction, todoList[index]),
             // cofirmDismiss 에서 true 가 return
-            onDismissed: (direction) {
+            onDismissed: (direction) async {
+              // 완료설정
               if (direction == DismissDirection.startToEnd) {
-                setState(() {
-                  todoList[index].complete = !todoList[index].complete;
-                });
+                var todo = todoList[index];
+                await TodoService().update(todo);
+                todo.complete = !todo.complete;
+                setState(() {});
+                // 삭제
               } else if (direction == DismissDirection.endToStart) {
+                var content = todoList[index].content;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("${todoList[index].content}를 삭제완료"),
+                    content: Text("$content를 삭제완료"),
                   ),
                 );
-
-                TodoService().delete(todoList[index].id ?? 0);
-                setState(() {
-                  // todoList.removeAt(index);
-                });
+                // DP PK 값을 delete 에게 직접 전달
+                await TodoService().delete(todoList[index].id ?? 0);
+                setState(() {});
               }
             },
 
@@ -235,9 +239,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<bool?> onConfirmHandler(direction, index) {
+  Future<bool?> onConfirmHandler(direction, Todo todo) {
     if (direction == DismissDirection.startToEnd) {
-      return completeConfirm(index);
+      return completeConfirm(todo);
     } else if (direction == DismissDirection.endToStart) {
       return deleteConfirm();
     }
@@ -268,8 +272,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<bool?> completeConfirm(index) {
-    var yesNo = todoList[index].complete ? "완료처리를 취소할까요?" : "완료처리를 할까요?";
+  Future<bool?> completeConfirm(Todo todo) {
+    var yesNo = todo.complete ? "완료처리를 취소할까요?" : "완료처리를 할까요?";
+    // var yesNo = "완료확인";
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(

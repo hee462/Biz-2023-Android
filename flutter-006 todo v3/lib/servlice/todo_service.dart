@@ -2,6 +2,9 @@ import 'package:flutter_application_1/model/todo.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+// ignore: constant_identifier_names
+const String TBL_TODO = "tbl_todoList";
+
 /// 안드로이드, iphone에는 공통으로 SQLite라는 RDBMS가 내장되어있다
 /// 규모는 매우 작지만 phone에서 DB를 SQL 을 사용하여 관리할수 있도록
 /// 여러가지 명령어를 제공한다
@@ -11,9 +14,8 @@ class TodoService {
   // late 키워드는 아직 변수를 초기화 시키지 않았지만, 이 값은 null이 아니다라는 선언
   // 즉, 곧 이 변수는 누군가로 부터 초기화(값 부여)를 할 것이다
   late Database _database;
-  final TBL_TODO = "tbl_todoList";
   final String createTable = """
-  CREATE TABLE  tbl_todoList(
+  CREATE TABLE  $TBL_TODO(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     sdate TEXT,
     stime TEXT,
@@ -71,7 +73,7 @@ class TodoService {
 
   Future<int> delete(int id) async {
     final db = await database;
-    return db.delete(TBL_TODO, where: "id = ?", whereArgs: [id]);
+    return await db.delete(TBL_TODO, where: "id = ?", whereArgs: [id]);
   }
 
   Future<int> update(Todo todo) async {
