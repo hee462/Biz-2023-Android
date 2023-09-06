@@ -1,58 +1,51 @@
-# Biz-2023-Android
+# Flutter firebase 연동프로젝트
 
--Android Project
+- `auth(인증)`, `fireStore(DBMS)`, `real Database(DBMS)` 등을 연동하여 프로젝트를 구현할수 있다
+- 다른 프로젝트(react)에서는 Hosting 등도 사용할 수 있다.
 
-- @since 2023-08-28
+## firebase-auth
 
-## Flutter 설치
+- `firebase`를 통하여 `Email 방식의 회원가입` ,` Email 방식의 로그인`을 구현할수 있다.
+- `google login`등 `oAuth2(인증Token방식)`방식의 인증을 구현할 수 있다.
 
-- 설치파일 다운로드 : `flutter.dev` 사이트에서 `Get Started` 접속하여 `flutter*.zip` 다운
-- `c:\dev` 폴더에 파일 이동 후 압축 풀기
-- 압축 해제된 폴더에서 `flutter` 폴더를 `c:\dev` 폴더로 이동
-- windows 의 고급설정보기에서 환경변수 path 항목에 `c:\dev\flutter\bin`폴더 추가하기
+## DBMS 연동 :fireStore, real Database
 
-## flutter extention 설치
+- `NoSQL`방식으로 Data CRUD 를 구현할 수 있고,
+- `1:1` 방식의 채팅구현
+- `Message` 전달 등도 구현
 
-- vsCode 확장 plugin 설치 : flutter 검색하여 설치
+## Flutter와 firebase 를 연동하기 위하여 사전 도구 설치
 
-## flutter project 생성
+- Cli 도구 설치 : `npm install -g firebase-tools`
+- 기존 설치 및 업데이트 :`npm install -g firebase-tool@latest`
+- 설치확인 : `firebase --version`
 
-```bash
-flutter create --org=com.hee462 hello
+## firebase 프로젝트 생성하기
 
+- `firebase.google.com` 사이트에서 새로운 프로젝트 생성하기
 
-```
+- 생성된 프로젝트에 flutter 앱 추가하기
+  ![Alt text](image-5.png)
+  ![Alt text](image-6.png)
 
-## 프로젝트 명명 주의
+-`firebase-Cli`명령을 실행하여 프로젝트 구성하기 : 첫번째줄만 터미널 입력
+![Alt text](image-7.png)
 
-- 만약 다음과 같이 프로젝트이름을 생성하면 base-package가 `com.callor.flutter-000-hello-01`처럼 생성되어 버린다
-- 프로젝트 이름은 짧은 key 값으로 생성하고 이후에 프로젝트폴더 이름을 변경해 주는 것이 파일 관리가 유리하다
-- 프로젝트 이름은 가급적 소금자로 작성한다
+- vscode에서 윈도우 cmd 창 열기 :`flutterfire` 명령은 윈도우 cmd 창에서만 실행됨
+  ![Alt text](image-8.png)
+  ![Alt text](image-9.png)
 
-```bash
-flutter create --org=com. hee462 flutter-000-hello-01
-```
+- 새로 생성한 프로젝트로 폴더 이동하기 : `cd flutter-008 firebase`
+- 프로젝트 폴더에서 config 명령 실행 : `flutterfire configure --project=flutter-my-app-18a52`
 
-## flutter 개발환경 설정 : 사용준비, 기존의 다른 도구들과 연결하기
+- 명령 실행후 경고가 나오면 시스템 path에 경로 등록
+  ![Alt text](image-10.png)
+  `C:\Users\KMS5050031\AppData\Local\Pub\Cache\bin` 등록
 
-- flutter야 내 컴퓨터에 여러가지 도구가 있는데 그들과 연결을 해라
+- cmd 창에서 명령 실행한 후 적용할 대상 선택
+  ![Alt text](image-11.png)
 
-```bash
-flutter doctor
-```
+## 프로젝트에 dependency 설정하기
 
-- flutter doctor 실행 한후 Android toolchain 경고가 나오면 다음을 실행한다-> 질문사항 모두 Y
-
-```bash
-flutter doctor --android-licenses
-```
-
-## flutter prject를 github에서 clone 했을때
-
-- 프로젝트 코드, 파일에서 import 코드에 오류가 발생한다
-- github에 프로젝트를 push 하면 필요한 dependencies 도구들이 생략되어 push된다
-- clone 을 실행한 다음에는 dependencies 들을 다시 다운로드 해주어야 한다
-
-```bash
-flutter pub get
-```
+- console 화면에서 firebase plugin 설정으로 진행하기
+  ![Alt text](image-12.png)
