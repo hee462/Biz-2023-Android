@@ -13,3 +13,7 @@
   ![Alt text](image-5.png) // 유저창 접속
   ![Alt text](image-6.png) // 새사용자 추가
   ![Alt text](image-7.png) // 임시사용자 등록
+
+## firebase fireStroe 사용하기
+
+-dependeny 설치 : `flutter pub add cloud_firestore`

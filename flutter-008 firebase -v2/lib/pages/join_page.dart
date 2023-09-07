@@ -1,38 +1,38 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase/modules/input_form_field.dart';
 import 'package:firebase/modules/validate.dart';
-import 'package:firebase/pages/join_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPag extends StatefulWidget {
-  const LoginPag({
+class JoinPage extends StatefulWidget {
+  const JoinPage({
     super.key,
     required this.updateAuthUser,
   });
   // State<> 클래스 위젯에 함수를 전달하기 위하여 선언
   final Function(User? user) updateAuthUser;
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  State<StatefulWidget> createState() => _JoinPage();
 }
 
-class _LoginPageState extends State<LoginPag> {
+class _JoinPage extends State<JoinPage> {
   // TextFormField에서 사용하는 작은 InputController
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
+  final _nameFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
   String _emailValue = "";
   String _passwordValue = "";
+  String _nameValue = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 위치사항 고정
-      // resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text("login"),
+        title: const Text("join"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -41,6 +41,7 @@ class _LoginPageState extends State<LoginPag> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // 이메일
               inputformField(
                   focusNode: _emailFocus,
                   validator: (value) => CheckValidate()
@@ -48,6 +49,7 @@ class _LoginPageState extends State<LoginPag> {
                   setValue: (value) => _emailValue = value,
                   hintText: "이메일",
                   helperText: "이메일을 형식에 맞게 입력해주세요"),
+              // 패스워드
               inputformField(
                 focusNode: _passwordFocus,
                 hintText: "비밀번호",
@@ -57,8 +59,13 @@ class _LoginPageState extends State<LoginPag> {
                     .passwordCheck(password: value!, focusNode: _emailFocus),
               ),
               //login
-              loginButton(),
               //회원가입
+              inputformField(
+                focusNode: _nameFocus,
+                setValue: (value) => _nameValue = value,
+                validator: (value) => null,
+                hintText: "성명",
+              ),
               joinButton()
             ],
           ),
@@ -80,52 +87,34 @@ class _LoginPageState extends State<LoginPag> {
         ),
         onPressed: () async {
           _formKey.currentState?.validate();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                JoinPage(updateAuthUser: widget.updateAuthUser),
-          ));
+          try {
+            var result =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: _emailValue,
+              password: _passwordValue,
+            );
+            widget.updateAuthUser(result.user);
+            // email,password 이외의 회원정보를 저장하려면 firestroe에 저장해주어야 한다
+            if (result.user != null) {
+              await FirebaseFirestore.instance
+                  .collection("user")
+                  .doc(result.user!.uid)
+                  .set({
+                "email": result.user!.email,
+                "name": _nameValue,
+                "tel": "010-0000-0000"
+              });
+            }
+          } on FirebaseException catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(e.message!),
+            ));
+          }
         },
         child: const SizedBox(
           width: double.infinity,
           child: Text(
             "회원가입",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget loginButton() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-        onPressed: () async {
-          _formKey.currentState?.validate();
-          var result = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: _emailValue,
-            password: _passwordValue,
-          );
-          //    result.user != null ? true:false
-          // Navigator.pop(context,데이터) : 현재화면이 닫힐때
-          // 현재 화면을 열었던 곳으로 `데이터`를 return
-          debugPrint("REsult ${result.user.toString()}");
-          Navigator.pop(context, result.user != null);
-          widget.updateAuthUser(result.user);
-
-          // setState(() {});
-        },
-        child: const SizedBox(
-          width: double.infinity,
-          child: Text(
-            "login",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           ),
