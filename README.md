@@ -49,3 +49,23 @@
 
 - console 화면에서 firebase plugin 설정으로 진행하기
   ![Alt text](image-12.png)
+- 화면상단에서 android 선택하고 절차대로 진행
+  ![Alt text](image-13.png)
+
+```bash
+
+firebase login
+flutter pub add firebase_core
+flutter pub add firebase_auth
+
+```
+
+- dependeny 를 정상적으로 설치했는데, app 실행에 문제가 발생하는 경우가 가끔있다.
+  dependeny 들의 version 이 서로 맞지 않아서 발생하는 경우가 있다 이때는 다음 명령으로 clean을 실행한다
+
+```bash
+flutter pub upgrade outdated package
+flutter clean
+flutter pub get
+
+```
