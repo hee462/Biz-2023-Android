@@ -37,3 +37,6 @@ naver_open_api.*
 
 # Android Profiling
 *.hprof
+
+# 공공데이터 service
+*.env
